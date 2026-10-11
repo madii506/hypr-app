@@ -6,9 +6,9 @@ const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;'
 const isAddr=s=>/^0x[0-9a-fA-F]{40}$/.test((s||'').trim());
 const short=a=>a?a.slice(0,6)+'…'+a.slice(-4):'';
 const sleep=ms=>new Promise(r=>setTimeout(r,ms));
-function money(v,o={}){if(v==null||isNaN(v))return '—';const s=v<0?'−':(o.sign&&v>0?'+':''),a=Math.abs(v);let t;
+function money(v,o={}){if(v==null||isNaN(v))return '—';if(v===0)return '$0';const s=v<0?'−':(o.sign&&v>0?'+':''),a=Math.abs(v);let t;
  if(a>=1e9)t=(a/1e9).toFixed(a>=1e10?1:2)+'B';else if(a>=1e6)t=(a/1e6).toFixed(a>=1e7?1:2)+'M';else if(a>=1e3)t=(a/1e3).toFixed(a>=1e4?1:2)+'K';else t=a.toFixed(a>=100?0:2);return s+'$'+t}
-function pct(v,sign=true){if(v==null||isNaN(v))return '—';const p=v*100,a=Math.abs(p);return (p<0?'−':(sign&&p>0?'+':''))+(a>=1000?Math.round(a).toLocaleString():a.toFixed(a>=100?0:1))+'%'}
+function pct(v,sign=true){if(v==null||isNaN(v))return '—';const p=v*100,a=Math.abs(p);return (p<0?'−':(sign&&p>0?'+':''))+(a>=1000?Math.round(a).toLocaleString('en-US'):a.toFixed(a>=100?0:1))+'%'}
 function px(v){v=+v;if(!v&&v!==0)return '—';const a=Math.abs(v);if(a>=1000)return v.toLocaleString('en-US',{maximumFractionDigits:a>=10000?0:1});if(a>=1)return v.toFixed(a>=100?2:3);if(a>=.01)return v.toFixed(4);return v.toPrecision(3)}
 function num(v,d=0){return (+v).toLocaleString('en-US',{maximumFractionDigits:d})}
 const cls=v=>v>0?'up':v<0?'dn':'';
@@ -55,7 +55,7 @@ async function loadHome(){
   g.innerHTML=j.rows.slice(0,6).map((r,i)=>tcard(r,i)).join('');bindGlow(g);sparks(j.rows.slice(0,6));fv1(j.rows);launchPicks(j.rows);
  }catch(e){g.innerHTML=`<div class="card" style="grid-column:1/-1;padding:30px;text-align:center;color:var(--dim)">The Hyperliquid board didn't load. <button class="btn gh xs" id="rtry" style="margin-left:10px">Try again</button></div>`;$('#rtry').onclick=loadHome}
 }
-function tcard(r,i){const m=r.p.month||[0,0,0];return `<a class="card glow tc rv in" href="/t/${r.a}" data-r style="animation:rise .7s ${i*.07}s var(--ease) both"><div class="top">${av(r.a)}<div class="who"><div class="n">${esc(r.n||short(r.a))}</div><div class="a">${short(r.a)}</div></div><span class="rk">#${i+1}</span></div>
+function tcard(r,i){const m=r.p.month||[0,0,0];return `<a class="card glow tc rv in" href="/t/${r.a}" data-r style="animation:rise .7s ${i*.07}s var(--ease) both"><div class="top">${av(r.a)}<div class="who"><div class="n">${esc(r.n||short(r.a))}</div><div class="a">${r.n?short(r.a):'No display name'}</div></div><span class="rk">#${i+1}</span></div>
  <div><div class="pl">PNL · 30D</div><div class="pnl ${cls(m[0])}">${money(m[0],{sign:true})}</div></div>
  <div class="row"><div>ROI<b class="${cls(m[1])}">${pct(m[1])}</b></div><div>Volume<b>${money(m[2])}</b></div><div>Account<b>${money(r.av)}</b></div></div>
  <div class="spark" data-a="${r.a}"></div></a>`}
@@ -99,7 +99,7 @@ async function loadTraders(reset){if(T.busy)return;T.busy=true;const rows=$('#ro
   $('#bnote').textContent=T.s==='roi'&&!T.q?'ROI ranks accounts worth $10K or more.':'';
  }catch(e){rows.innerHTML=`<div class="empty">The Hyperliquid board didn't load. <button class="btn gh xs" id="rtry2" style="margin-left:8px">Try again</button></div>`;$('#rtry2').onclick=()=>{T.busy=false;loadTraders(true)}}
  T.busy=false}
-function trow(r,i,j){const p=r.p[T.q?'month':T.w]||[0,0,0];return `<a class="tr-r" href="/t/${r.a}" data-r style="--i:${j}"><span class="rk ${i<3&&!T.q?'medal':''}">${i+1}</span><span class="who">${av(r.a)}<span style="min-width:0"><div class="n">${esc(r.n||short(r.a))}</div><div class="a">${short(r.a)}</div></span></span><span class="r num ${cls(p[0])}">${money(p[0],{sign:true})}</span><span class="r num c4">${money(p[2])}</span><span class="r num c5 ${cls(p[1])}">${pct(p[1])}</span><span class="r num c6">${money(r.av)}</span><span class="r"><span class="btn gh xs" data-launch="${r.a}">Launch coin</span></span></a>`}
+function trow(r,i,j){const p=r.p[T.q?'month':T.w]||[0,0,0];return `<a class="tr-r" href="/t/${r.a}" data-r style="--i:${j}"><span class="rk ${i<3&&!T.q?'medal':''}">${i+1}</span><span class="who">${av(r.a)}<span style="min-width:0"><div class="n">${esc(r.n||short(r.a))}</div>${r.n?`<div class="a">${short(r.a)}</div>`:''}</span></span><span class="r num ${cls(p[0])}">${money(p[0],{sign:true})}</span><span class="r num c4">${money(p[2])}</span><span class="r num c5 ${cls(p[1])}">${pct(p[1])}</span><span class="r num c6">${money(r.av)}</span><span class="r"><span class="btn gh xs" data-launch="${r.a}">Launch coin</span></span></a>`}
 function initTraders(){const sw=$('#segw');sw.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;$$('button',sw).forEach(x=>x.classList.toggle('on',x===b));segPill(sw);T.w=b.dataset.v;loadTraders(true)});
  $$('.tr-h [data-s]').forEach(b=>b.addEventListener('click',()=>{$$('.tr-h [data-s]').forEach(x=>x.classList.toggle('on',x===b));T.s=b.dataset.s;loadTraders(true)}));$('.tr-h [data-s=pnl]').classList.add('on');
  let t=0;$('#tq').addEventListener('input',e=>{clearTimeout(t);t=setTimeout(()=>{const v=e.target.value.trim();if(isAddr(v))return nav('/t/'+v.toLowerCase());T.q=v.length>=2?v:'';loadTraders(true)},220)});
