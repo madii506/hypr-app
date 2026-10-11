@@ -1,0 +1,197 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>HYPR</title>
+<meta name="description" content="Launch a coin on any Hyperliquid trader. It trades against HYPE. Their share of every trade lands in their Hyperliquid account.">
+<meta name="theme-color" content="#050f0d">
+<meta property="og:title" content="HYPR">
+<meta property="og:description" content="Launch a coin on any Hyperliquid trader. It trades against HYPE. Their share of every trade lands in their Hyperliquid account.">
+<meta property="og:image" content="https://hypr-app.vercel.app/assets/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://hypr-app.vercel.app/assets/og.png">
+<link rel="icon" href="/assets/favicon.svg?v=2" type="image/svg+xml">
+<link rel="icon" href="/assets/icon-64.png?v=2" sizes="64x64" type="image/png">
+<link rel="apple-touch-icon" href="/assets/icon-180.png?v=2">
+<link rel="preload" href="/assets/inter-800.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/assets/app.css?v=2">
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+<linearGradient id="hg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#b4fff0"/><stop offset="1" stop-color="#3cc9ab"/></linearGradient>
+<symbol id="mk" viewBox="236 160 528 584"><rect x="292" y="250" width="16" height="70" rx="8" fill="#97fce4"/><rect x="252" y="306" width="96" height="368" rx="22" fill="url(#hg)"/><rect x="292" y="660" width="16" height="66" rx="8" fill="#97fce4"/><rect x="692" y="170" width="16" height="96" rx="8" fill="#97fce4"/><rect x="652" y="252" width="96" height="422" rx="22" fill="url(#hg)"/><rect x="692" y="660" width="16" height="70" rx="8" fill="#97fce4"/><rect x="336" y="452" width="328" height="64" rx="14" fill="url(#hg)"/></symbol>
+<symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="2"/><path d="m20 20-3.6-3.6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+<symbol id="i-copy" viewBox="0 0 24 24"><rect x="9" y="9" width="11" height="11" rx="2.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M5 15V6a2 2 0 0 1 2-2h8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+<symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h13M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+<symbol id="i-ext" viewBox="0 0 24 24"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+</defs></svg>
+
+<div class="backdrop"><div class="aur a1"></div><div class="aur a2"></div></div>
+<div class="sprog" id="sprog"></div>
+<div class="cursor-glow" id="cg"></div>
+
+<nav class="nav" id="nav">
+  <div class="links" id="links">
+    <span class="pill" id="npill"></span>
+    <a href="/" data-r class="hm">Home</a>
+    <a href="/traders" data-r>Traders</a>
+    <a href="/launch" data-r>Launch</a>
+    <a href="/how" data-r>How<span class="lgo"> it works</span></a>
+  </div>
+  <button class="btn pri sm" id="connect">Connect</button>
+</nav>
+
+<!-- HOME -->
+<div id="v-home" class="view">
+  <header class="hero" id="top">
+    <canvas id="hc"></canvas><canvas id="hp"></canvas>
+    <div class="hero-in">
+      <div class="bigmark"><svg viewBox="236 160 528 584" aria-hidden="true">
+        <g class="c"><rect x="292" y="250" width="16" height="70" rx="8" fill="#97fce4"/><rect x="252" y="306" width="96" height="368" rx="22" fill="url(#hg)"/><rect x="292" y="660" width="16" height="66" rx="8" fill="#97fce4"/></g>
+        <g class="c c2"><rect x="692" y="170" width="16" height="96" rx="8" fill="#97fce4"/><rect x="652" y="252" width="96" height="422" rx="22" fill="url(#hg)"/><rect x="692" y="660" width="16" height="70" rx="8" fill="#97fce4"/></g>
+        <rect class="xb" x="336" y="452" width="328" height="64" rx="14" fill="url(#hg)"/>
+      </svg></div>
+      <h1 class="h1" id="h1">Launch a coin on any <em>Hyperliquid trader.</em></h1>
+      <p class="sub">It trades against HYPE. Their share of every trade lands in their Hyperliquid account. Nothing to claim.</p>
+      <div class="search" data-search>
+        <div class="sbox"><svg><use href="#i-search"/></svg><input placeholder="Search a trader or paste an address" autocomplete="off" spellcheck="false"><kbd>/</kbd><button class="btn pri sm" data-go>Find</button></div>
+      </div>
+      <div class="ctas"><a class="btn gh" href="/traders" data-r>Browse traders <svg width="16" height="16"><use href="#i-arrow"/></svg></a><a class="btn gh" href="/how" data-r>How it works</a></div>
+    </div>
+    <div class="hc-label" id="hcl"></div>
+    <div class="scrollhint"></div>
+    <div class="ticker"><div class="tr" id="tick"></div></div>
+  </header>
+
+  <section class="sec" style="padding-top:90px">
+    <div class="wrap">
+      <div class="stats rv" id="stats">
+        <div class="stat"><div class="v" data-k="n">—</div><div class="l">Traders on the board</div><div class="s">Hyperliquid leaderboard</div></div>
+        <div class="stat"><div class="v" data-k="av">—</div><div class="l">Their account value</div><div class="s">All accounts combined</div></div>
+        <div class="stat"><div class="v" data-k="top">—</div><div class="l">Best PnL · 30D</div><div class="s" data-k="topn">&nbsp;</div></div>
+        <div class="stat"><div class="v" data-k="hype">—</div><div class="l">HYPE</div><div class="s" data-k="hypec">Live mid price</div></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="mqs" id="mqs" hidden><div class="mq"><div class="mqr" id="mq1"></div></div><div class="mq"><div class="mqr rev" id="mq2"></div></div></section>
+
+  <section class="sec" style="padding-top:20px">
+    <div class="wrap">
+      <div class="shead">
+        <div class="rv"><div class="kicker">THE BOARD · 30 DAYS</div><h2 class="h2">The best traders on Hyperliquid.<br><em>Any of them</em> can have a coin.</h2></div>
+        <a class="btn gh rv" href="/traders" data-r style="--d:.1s">See all traders <svg width="16" height="16"><use href="#i-arrow"/></svg></a>
+      </div>
+      <div class="tgrid" id="topgrid"></div>
+    </div>
+  </section>
+
+  <section class="sec" id="how">
+    <div class="wrap">
+      <div class="shead"><div class="rv"><div class="kicker">HOW IT WORKS</div><h2 class="h2">Four steps. <em>No sign-up</em> for anyone.</h2></div></div>
+      <div class="steps">
+        <div class="card glow step rv"><div class="num">01</div><div class="ic"><svg><use href="#i-search"/></svg></div><h3>Pick a trader</h3><p>Search any address on Hyperliquid or pick one from the live board. Their real positions and PnL are on their page.</p></div>
+        <div class="card glow step rv" style="--d:.08s"><div class="num">02</div><div class="ic"><svg viewBox="0 0 24 24"><path d="M12 3v18M3 12h18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></div><h3>Launch the coin</h3><p>Name it, add an image, launch. One coin per trader, on HyperEVM, priced in HYPE.</p></div>
+        <div class="card glow step rv" style="--d:.16s"><div class="num">03</div><div class="ic"><svg viewBox="0 0 24 24"><path d="M4 17l5-5 4 4 7-8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><h3>People trade it</h3><p>Every coin trades against HYPE on its own curve from the first block. No presale, no team tokens.</p></div>
+        <div class="card glow step rv" style="--d:.24s"><div class="num">04</div><div class="ic"><svg viewBox="0 0 24 24"><path d="M3 7h18v12H3zM3 7l3-3h12l3 3M16 13h2" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg></div><h3>The trader gets paid</h3><p>Every trade pays a 1% fee. The trader's share goes to their Hyperliquid spot balance on its own.</p></div>
+      </div>
+      <div class="card flow rv">
+        <div>
+          <h3>1% of every trade.<br>Most of it goes to the trader.</h3>
+          <p>The fee is taken in HYPE on every buy and sell. The trader's share is sent to the HYPR vault, which pushes it to their HyperCore spot balance. Nobody has to claim anything.</p>
+          <div class="split" id="split"><div class="bar"><i class="a" data-w="90"></i><i class="b" data-w="10"></i></div><div class="lg"><span>To the trader <b>0.9%</b></span><span>To HYPR <b>0.1%</b></span></div></div>
+        </div>
+        <div class="diagram"><svg viewBox="0 0 640 230">
+          <path id="p1" class="ln" d="M172 115 H 246"/>
+          <path id="p2" class="ln" d="M394 115 C 432 115 430 55 468 55"/>
+          <path id="p3" class="ln" d="M394 115 C 432 115 430 175 468 175"/>
+          <g class="nd"><rect x="20" y="83" width="152" height="64" rx="16"/><text x="40" y="112">Buy or sell</text><text class="t2" x="40" y="132">ANY TRADE · HYPE</text></g>
+          <g class="nd"><rect x="246" y="83" width="148" height="64" rx="16"/><text x="266" y="112">1% fee</text><text class="t2" x="266" y="132">TAKEN IN HYPE</text></g>
+          <g class="nd"><rect x="468" y="23" width="160" height="64" rx="16" style="stroke:rgba(151,252,228,.7)"/><text x="488" y="52">The trader</text><text class="t2" x="488" y="72">HYPERCORE · 0.9%</text></g>
+          <g class="nd"><rect x="468" y="143" width="160" height="64" rx="16"/><text x="488" y="172">HYPR</text><text class="t2" x="488" y="192">TREASURY · 0.1%</text></g>
+          <circle class="pt" r="4"><animateMotion dur="1.6s" repeatCount="indefinite"><mpath href="#p1"/></animateMotion></circle>
+          <circle class="pt" r="4"><animateMotion dur="1.6s" begin=".8s" repeatCount="indefinite"><mpath href="#p1"/></animateMotion></circle>
+          <circle class="pt" r="4.5"><animateMotion dur="1.8s" begin=".4s" repeatCount="indefinite"><mpath href="#p2"/></animateMotion></circle>
+          <circle class="pt" r="4.5"><animateMotion dur="1.8s" begin="1.3s" repeatCount="indefinite"><mpath href="#p2"/></animateMotion></circle>
+          <circle class="pt" r="3" style="opacity:.6"><animateMotion dur="2.6s" begin="1s" repeatCount="indefinite"><mpath href="#p3"/></animateMotion></circle>
+        </svg></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec" style="padding-top:40px">
+    <div class="wrap">
+      <div class="feats">
+        <div class="card glow feat rv"><div class="vis" id="fv1"></div><h3>Any trader</h3><p>Every address on Hyperliquid, from the top of this month's board to the account that opened yesterday.</p></div>
+        <div class="card glow feat rv" style="--d:.08s"><div class="vis" id="fv2"><div style="text-align:center"><div class="mono" style="font-size:11px;letter-spacing:.14em;color:var(--mute)">HYPE · LIVE</div><div id="fvp" style="font-size:34px;font-weight:800;letter-spacing:-.03em;margin-top:6px">—</div></div></div><h3>Priced in HYPE</h3><p>Coins trade against HYPE on HyperEVM. Every buy is HYPE in, every sell is HYPE out.</p></div>
+        <div class="card glow feat rv" style="--d:.16s"><div class="vis" id="fv3"><svg viewBox="0 0 220 100" width="220" height="100"><path d="M20 50 H 150" stroke="rgba(151,252,228,.25)" stroke-width="1.5" stroke-dasharray="4 6" fill="none"><animate attributeName="stroke-dashoffset" from="0" to="-20" dur="1s" repeatCount="indefinite"/></path><circle r="5" fill="#97fce4" style="filter:drop-shadow(0 0 6px #97fce4)"><animateMotion dur="1.4s" repeatCount="indefinite" path="M20 50 H 150"/></circle><rect x="150" y="26" width="52" height="48" rx="12" fill="rgba(151,252,228,.08)" stroke="rgba(151,252,228,.5)"/><path d="M162 46h28M162 54h18" stroke="#97fce4" stroke-width="3" stroke-linecap="round"/></svg></div><h3>Nothing to claim</h3><p>No sign-up and no claim button. The trader's share moves to their HyperCore spot balance on its own.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec">
+    <div class="wrap faq">
+      <div class="rv"><div class="kicker">FAQ</div><h2 class="h2">Questions,<br><em>answered.</em></h2></div>
+      <div class="rv" id="faq" style="--d:.1s">
+        <div class="qa op"><button>Does the trader have to sign up?<i></i></button><div class="ans"><div><p>No. Every Hyperliquid address can have a coin. Their share goes to that same address, so there is nothing for them to set up or claim.</p></div></div></div>
+        <div class="qa"><button>Where does the trader's share go?<i></i></button><div class="ans"><div><p>Each trade sends it to the HYPR vault contract. Once enough HYPE is waiting, the vault bridges it to HyperCore and sends it to the trader's spot balance. If that route isn't open for an account yet, it goes to the same address on HyperEVM.</p></div></div></div>
+        <div class="qa"><button>Why HYPE?<i></i></button><div class="ans"><div><p>It's what Hyperliquid traders already hold. Every coin is priced in HYPE: buying is HYPE in, selling is HYPE out, and the trader is paid in HYPE.</p></div></div></div>
+        <div class="qa"><button>How many coins can one trader have?<i></i></button><div class="ans"><div><p>One. The coin's address is fixed by the trader's address, so there is never a second coin or a copy for the same trader.</p></div></div></div>
+        <div class="qa"><button>Can a trader opt out?<i></i></button><div class="ans"><div><p>Yes. If a trader asks, their share stops being paid out and stays in the coin's pool instead, which lifts its price.</p></div></div></div>
+        <div class="qa"><button>Where do the numbers on this site come from?<i></i></button><div class="ans"><div><p>Straight from Hyperliquid: the public leaderboard, and each account's live positions, fills and PnL. Nothing here is estimated.</p></div></div></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="wrap">
+    <div class="card band rv"><div class="rays"></div>
+      <div style="position:relative"><div class="kicker" style="justify-content:center">START HERE</div><h2 class="h2">Your favourite trader <em>doesn't have a coin yet.</em></h2>
+      <div class="search" data-search><div class="sbox"><svg><use href="#i-search"/></svg><input placeholder="Search a trader or paste an address" autocomplete="off" spellcheck="false"><button class="btn pri sm" data-go>Find</button></div></div></div>
+    </div>
+  </section>
+</div>
+
+<!-- TRADERS -->
+<div id="v-traders" class="view" hidden>
+  <div class="page wrap">
+    <div class="kicker">THE BOARD</div>
+    <h2 class="h2">Traders</h2>
+    <p class="lead">Live from the Hyperliquid leaderboard. Open anyone to see their positions, then launch their coin.</p>
+    <div class="bar">
+      <div class="seg" id="segw"><span class="pill"></span><button data-v="day">24H</button><button data-v="week">7D</button><button data-v="month" class="on">30D</button><button data-v="allTime">ALL</button></div>
+      <div class="sbox" data-search-local><svg><use href="#i-search"/></svg><input id="tq" placeholder="Filter by name or address" autocomplete="off" spellcheck="false"></div>
+    </div>
+    <div class="tbl">
+      <div class="tr-h"><span>#</span><span>Trader</span><button class="r" data-s="pnl">PnL</button><button class="r c4" data-s="vlm">Volume</button><button class="r c5" data-s="roi">ROI</button><button class="r c6" data-s="av">Account</button><span class="r"></span></div>
+      <div id="rows"></div>
+    </div>
+    <div class="more"><button class="btn gh sm" id="moreb" hidden>Show more</button></div>
+    <p class="note" id="bnote"></p>
+  </div>
+</div>
+
+<!-- TRADER -->
+<div id="v-trader" class="view" hidden><div class="page wrap" id="tp"></div></div>
+
+<!-- LAUNCH -->
+<div id="v-launch" class="view" hidden>
+  <div class="page wrap" style="max-width:760px;text-align:center">
+    <div class="kicker" style="justify-content:center">LAUNCH</div>
+    <h2 class="h2">Who's the coin <em>for?</em></h2>
+    <p class="lead" style="margin:16px auto 0">Every coin belongs to one Hyperliquid trader. Find them first. Their page has the launch form.</p>
+    <div class="search" data-search style="margin:34px auto 0"><div class="sbox"><svg><use href="#i-search"/></svg><input placeholder="Search a trader or paste an address" autocomplete="off" spellcheck="false"><button class="btn pri sm" data-go>Find</button></div></div>
+    <div class="kicker" style="justify-content:center;margin-top:60px">OR PICK FROM THIS MONTH'S TOP</div>
+    <div id="lpick" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px;margin-top:10px;text-align:left"></div>
+  </div>
+</div>
+
+<footer><div class="wrap fin">
+  <a class="brand" href="/" data-r><svg><use href="#mk"/></svg><span>HYPR</span></a>
+  <div class="links2"><a href="/traders" data-r>Traders</a><a href="/launch" data-r>Launch</a><a href="/how" data-r>How it works</a><a href="#" id="xlink" target="_blank" rel="noopener" hidden>X</a></div>
+</div></footer>
+
+<div class="toast" id="toast"></div>
+<script src="/assets/app.js?v=2" defer></script>
+</body>
+</html>
